@@ -37,32 +37,17 @@
 
 \section*{Contents}
 
-\begin{tabular}{ {% for header in data.headers %}Sl{% if not loop.last %}|{% endif %}{% endfor %} }
-    {% for header in data.headers -%}
-    \textbf{ {{- header -}} } {%- if loop.last -%}\\{%- else -%}&{%- endif -%}
-    {%- endfor %}
+\begin{tabular}{ Sl|Sl|Sl|Sl|Sl }
+    \textbf{Item}&\textbf{CAS No.}&\textbf{Weight}&\textbf{Mass \%}&\textbf{Emergency Telephone}\\
     \hline
-    {% for row in data.rows %}
-    {%- for cell in row -%}
-    {{- cell -}} {%- if loop.last -%}\\
-    {% else -%}&{%- endif -%}
-    {%- endfor -%}
-    {% endfor %}
+    Rubber Ducky&000000-00&400 kg&80\%&+1(630) 000-0000\\
+    Dino&000001-00&100 kg&20\%&+1(630) 000-0000\\
+    
 \end{tabular}
 
 \section*{Hazards Disclosure}
 \subsection*{Signal Word}
-{{ data.signal_word }}
+Danger
 \subsection*{Pictogram(s)}
 
-{% if "PICT_GHS01_EXPLOSIVE" in data.pictograms -%}\pictGhsExplosive{%- endif -%}
-{% if "PICT_GHS02_FLAMMABLE" in data.pictograms -%}\pictGhsFlammable{%- endif -%}
-{% if "PICT_GHS03_OXIDIZING" in data.pictograms -%}\pictGhsOxidizing{%- endif -%}
-{% if "PICT_GHS04_COMPRESSED_GAS" in data.pictograms -%}\pictGhsCompressedGas{%- endif -%}
-{% if "PICT_GHS05_CORROSIVE" in data.pictograms -%}\pictGhsCorrosive{%- endif -%}
-{% if "PICT_GHS06_TOXIC" in data.pictograms -%}\pictGhsToxic{%- endif -%}
-{% if "PICT_GHS07_HARMFUL" in data.pictograms -%}\pictGhsHarmful{%- endif -%}
-{% if "PICT_GHS08_HEALTH_HAZARD" in data.pictograms -%}\pictGhsHealthHazard{%- endif -%}
-{% if "PICT_GHS09_ENVIRONMENTAL_HAZARD" in data.pictograms -%}\pictGhsEnvironmentalHazard{%- endif -%}
-
-\end{document}
+\pictGhsCompressedGas\pictGhsHarmful\end{document}

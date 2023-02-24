@@ -1,9 +1,4 @@
-from pathlib import Path
-from jinja2 import Environment, FileSystemLoader
-
-file_loader = FileSystemLoader(Path(__file__).parent)
-env = Environment(loader=file_loader)
-template = env.get_template('template.tex')
+import templater
 
 data = {
 	'headers': ["Item", "CAS No.", "Weight", "Mass \\%", "Emergency Telephone"],
@@ -15,7 +10,9 @@ data = {
 	'pictograms': ["PICT_GHS04_COMPRESSED_GAS", "PICT_GHS07_HARMFUL"]
 }
 
-output = template.render(data=data)
+templater = templater.Templater()
 
-with open("output.tex", "w") as f:
+output = templater.template_front_page(data)
+
+with open("example-output.tex", "w") as f:
 	f.write(output)

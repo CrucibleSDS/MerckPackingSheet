@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "merckpackingsheet"
+version = "0.1.0"
+description = "Jinja template for Crucible Packing Sheet"
+authors = ["Brian Lu <me@greencappuccino.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+Jinja2 = "~3.1.2"
+MarkupSafe = "~2.1.2"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "~6.0.0"
+taskipy = "~1.10.4"
+pre-commit = "~3.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

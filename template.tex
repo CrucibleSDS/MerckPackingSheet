@@ -1,58 +1,105 @@
-\documentclass[letterpaper, 11pt]{article}
+\documentclass[{{ data.paper }}, 11pt]{article}
+\usepackage[table]{xcolor}
 \usepackage{graphicx} % Required for inserting images
-\graphicspath{ {./img} }
+\graphicspath{ {{- data.graphicspath -}} }
 \usepackage{svg}
-\svgpath{ {./img} }
+\svgpath{ {{- data.graphicspath -}} }
 \usepackage[utf8]{inputenc}
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.5in,bottom=1.125in]{geometry}
 \usepackage{nopageno}
-\usepackage{cellspace}
-\setlength\cellspacetoplimit{5pt}
-\setlength\cellspacebottomlimit{5pt}
-
+\usepackage{adjustbox}
+\usepackage{ragged2e}
+\usepackage{multicol}
+\usepackage{xltabular}
 \usepackage[default]{lato}
 \usepackage[T1]{fontenc}
-
-\usepackage{amsfonts}
-\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{tikzpagenodes}
 \usepackage{amssymb}
-\usepackage{amsthm}
+\usepackage{pifont}
+\usepackage{enumitem}
 
-\def\pictGhsExplosive{\includesvg[width=50pt]{PICT_GHS01_EXPLOSIVE.svg} }
-\def\pictGhsFlammable{\includesvg[width=50pt]{PICT_GHS02_FLAMMABLE.svg} }
-\def\pictGhsOxidizing{\includesvg[width=50pt]{PICT_GHS03_OXIDIZING.svg} }
-\def\pictGhsCompressedGas{\includesvg[width=50pt]{PICT_GHS04_COMPRESSED_GAS.svg} }
-\def\pictGhsCorrosive{\includesvg[width=50pt]{PICT_GHS05_CORROSIVE.svg} }
-\def\pictGhsToxic{\includesvg[width=50pt]{PICT_GHS06_TOXIC.svg} }
-\def\pictGhsHarmful{\includesvg[width=50pt]{PICT_GHS07_HARMFUL.svg} }
-\def\pictGhsHealthHazard{\includesvg[width=50pt]{PICT_GHS08_HEALTH_HAZARD.svg} }
-\def\pictGhsEnvironmentalHazard{\includesvg[width=50pt]{PICT_GHS09_ENVIRONMENTAL_HAZARD.svg} }
+\newcommand{\pictGhsExplosive}{\includesvg[width=50pt,keepaspectratio,keepaspectratio]{PICT_GHS01_EXPLOSIVE.svg} }
+\newcommand{\pictGhsFlammable}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS02_FLAMMABLE.svg} }
+\newcommand{\pictGhsOxidizing}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS03_OXIDIZING.svg} }
+\newcommand{\pictGhsCompressedGas}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS04_COMPRESSED_GAS.svg} }
+\newcommand{\pictGhsCorrosive}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS05_CORROSIVE.svg} }
+\newcommand{\pictGhsToxic}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS06_TOXIC.svg} }
+\newcommand{\pictGhsHarmful}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS07_HARMFUL.svg} }
+\newcommand{\pictGhsHealthHazard}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS08_HEALTH_HAZARD.svg} }
+\newcommand{\pictGhsEnvironmentalHazard}{\includesvg[width=50pt,keepaspectratio]{PICT_GHS09_ENVIRONMENTAL_HAZARD.svg} }
+
+\newcommand{\labelConfidentialWide}{\includesvg[height=40pt,keepaspectratio]{confidential-wide.svg} }
+\newcommand{\labelProprietaryWide}{\includesvg[height=40pt,keepaspectratio]{proprietary-wide.svg} }
+\newcommand{\labelPublicWide}{\includesvg[height=40pt,keepaspectratio]{public-wide.svg} }
+\newcommand{\labelSensitiveWide}{\includesvg[height=40pt,keepaspectratio]{sensitive-wide.svg} }
+
+\newcolumntype{L}{>{\RaggedRight} X}
+
+\definecolor{MerckTeal}{HTML}{008080}
+
+\newlist{checklist}{itemize}{2}
+\setlist[checklist]{label={\color{MerckTeal}$\square$} }
+\newcommand{\done}{\rlap{\color{MerckTeal}$\square$}{\raisebox{2pt}{\large\hspace{1pt}\ding{51} } }\hspace{-2.5pt} }
 
 \title{Merck Packing Sheet}
 \author{Crucible SDS Software}
 
 \begin{document}
 
-\includesvg[width=200pt]{Merck_Logo.svg}
+\fancyhf{}
+\fancyfoot{
+    \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south east, inner xsep=0, inner ysep=5] at (current page footer area.south east) {\label{{ data.sensitivity }}Wide};
+    \end{tikzpicture}
+}
+\renewcommand{\headrule}{}
+\renewcommand{\footrule}{}
+\setlength{\headheight}{15pt}
+\setlength{\footskip}{55pt}
+% Apply the footer style to all pages
+\pagestyle{fancy}
 
-\section*{Contents}
 
-\begin{tabular}{ {% for header in data.headers %}Sl{% if not loop.last %}|{% endif %}{% endfor %} }
+\begin{tikzpicture}[remember picture,overlay]
+  \node[rectangle, fill=MerckTeal, minimum width=\paperwidth, minimum height=60pt, anchor=north west] (header) at (current page.north west) {};
+  \node[anchor=north east, inner ysep=15pt, inner xsep=35] at (header.north east) {\includesvg[height=30pt,keepaspectratio]{Merck_Logo_Square.svg} };
+  \node[anchor=south west, inner ysep=15pt, inner xsep=35] (title) at (header.south west) {\textcolor{white}{\Huge\textbf{ {{- data.cover_title -}} } } };
+\end{tikzpicture}
+
+\section*{Product Name: {\color{MerckTeal} {{- data.product_name -}} } }
+
+\section*{Ship To/Destination Country: {\color{MerckTeal} {{- data.destination_country -}} } }
+
+\section*{Composition/Ingredients}
+\rowcolors{1}{gray!25}{white}
+\begin{xltabular}{\textwidth}{ {{-data.columns -}} }
+    \rowcolor{white}
     {% for header in data.headers -%}
-    \textbf{ {{- header -}} } {%- if loop.last -%}\\{%- else -%}&{%- endif -%}
+    \textbf{ {{- header -}} } {%- if loop.last -%}\rule{0pt}{2ex}\\{%- else -%}&{%- endif -%}
     {%- endfor %}
     \hline
     {% for row in data.rows %}
     {%- for cell in row -%}
-    {{- cell -}} {%- if loop.last -%}\\
+    {{- cell -}} {%- if loop.last -%}\rule{0pt}{2ex}\\
     {% else -%}&{%- endif -%}
     {%- endfor -%}
     {% endfor %}
-\end{tabular}
+\end{xltabular}
 
 \section*{Hazards Disclosure}
+
+\begin{minipage}[t]{0.18\textwidth}
 \subsection*{Signal Word}
-{{ data.signal_word }}
+\vspace{15pt}
+{% if data.signal_word %}
+{\setlength{\fboxrule}{2.5pt}\fcolorbox{red}{white}{\Large\fontseries{ub}\selectfont{ {{- data.signal_word -}} } } }
+{% endif %}
+\vspace{15pt}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.78\textwidth}
 \subsection*{Pictogram(s)}
 
 {% if "PICT_GHS01_EXPLOSIVE" in data.pictograms -%}\pictGhsExplosive{%- endif -%}
@@ -64,5 +111,61 @@
 {% if "PICT_GHS07_HARMFUL" in data.pictograms -%}\pictGhsHarmful{%- endif -%}
 {% if "PICT_GHS08_HEALTH_HAZARD" in data.pictograms -%}\pictGhsHealthHazard{%- endif -%}
 {% if "PICT_GHS09_ENVIRONMENTAL_HAZARD" in data.pictograms -%}\pictGhsEnvironmentalHazard{%- endif -%}
+{% if data.pictograms|length > 0 %}{% else %}N/A\\{% endif %}
+
+\end{minipage}
+
+\subsection*{Hazard Statement(s) Overview}
+\begin{multicols}{3}
+\begin{checklist}
+\item{% if "ACUTE_TOXICITY" in data.hazard_statement_overview %}[\done]{% endif %} Acute Toxicity
+\item{% if "ASPIRATIONAL_HAZARD" in data.hazard_statement_overview %}[\done]{% endif %} Aspirational Hazard
+\item{% if "CARCINOGENCITY" in data.hazard_statement_overview %}[\done]{% endif %} Carcinogencity
+\item{% if "EMIT_FLAMMABLE_GASES" in data.hazard_statement_overview %}[\done]{% endif %} Chemicals Which, In Contact With Water, Emit Flammable Gases
+\item{% if "COMBUSTIBLE_DUST" in data.hazard_statement_overview %}[\done]{% endif %} Combustible Dust
+\item{% if "CORROSIVE_TO_METALS" in data.hazard_statement_overview %}[\done]{% endif %} Corrosive to Metals
+\item{% if "EXPLOSIVES" in data.hazard_statement_overview %}[\done]{% endif %} Explosives
+\item{% if "FLAMMABLE_AEROSOLS" in data.hazard_statement_overview %}[\done]{% endif %} Flammable Aerosols
+\item{% if "FLAMMABLE_LIQUIDS" in data.hazard_statement_overview %}[\done]{% endif %} Flammable Liquids
+\item{% if "FLAMMABLE_SOLIDS" in data.hazard_statement_overview %}[\done]{% endif %} Flammable Solids
+\item{% if "GASES_UNDER_PRESSURE" in data.hazard_statement_overview %}[\done]{% endif %} Gases Under Pressure
+\item{% if "GERM_CELL_MUTAGENCITY" in data.hazard_statement_overview %}[\done]{% endif %} Germ Cell Mutagencity
+\item{% if "HAZARDOUS_TO_AQUATIC_ENVIRONMENT" in data.hazard_statement_overview %}[\done]{% endif %} Hazardous to Aquatic Environment
+\item{% if "HAZARDOUS_TO_OZONE_LAYER" in data.hazard_statement_overview %}[\done]{% endif %} Hazardous to the Ozone Layer
+\item{% if "OXIDIZING_GASES" in data.hazard_statement_overview %}[\done]{% endif %} Oxidizing Gases
+\item{% if "OXIDIZING_LIQUIDS" in data.hazard_statement_overview %}[\done]{% endif %} Oxidizing Liquids
+\item{% if "OXIDIZING_SOLIDS" in data.hazard_statement_overview %}[\done]{% endif %} Oxidizing Solids
+\item{% if "ORGANIC_PEROXIDES" in data.hazard_statement_overview %}[\done]{% endif %} Organic Peroxides
+\item{% if "PYROPHORIC_GAS" in data.hazard_statement_overview %}[\done]{% endif %} Pyrophoric Gas
+\item{% if "PYROPHORIC_LIQUIDS" in data.hazard_statement_overview %}[\done]{% endif %} Pyrophoric Liquids
+\item{% if "PYROPHORIC_SOLID" in data.hazard_statement_overview %}[\done]{% endif %} Pyrophoric Solid
+\item{% if "REPRODUCTIVE_TOXICITY" in data.hazard_statement_overview %}[\done]{% endif %} Reproductive Toxicity
+\item{% if "RESPIRATORY_OR_SKIN_SENSITIZATION" in data.hazard_statement_overview %}[\done]{% endif %} Respiratory or Skin Sensitization
+\item{% if "SELF_HEATING_CHEMICALS" in data.hazard_statement_overview %}[\done]{% endif %} Self-Heating Chemicals
+\item{% if "SELF_REACTIVE_CHEMICALS" in data.hazard_statement_overview %}[\done]{% endif %} Self-Reactive Chemicals
+\item{% if "SERIOUS_EYE_DAMAGE_IRRITATION" in data.hazard_statement_overview %}[\done]{% endif %} Serious Eye Damage/Eye Irritation
+\item{% if "SKIN_CORROSION_IRRITATION" in data.hazard_statement_overview %}[\done]{% endif %} Skin Corrosion/Irritation
+\item{% if "SIMPLE_ASPHYXIANT" in data.hazard_statement_overview %}[\done]{% endif %} Simple Asphyxiant
+\item{% if "ORGAN_TOXICITY_REPEATED_PROLONGED" in data.hazard_statement_overview %}[\done]{% endif %} Specific Target Organ Toxicity—Repeated or Prolonged Exposure
+\item{% if "ORGAN_TOXICITY_SINGLE" in data.hazard_statement_overview %}[\done]{% endif %} Specific Target Organ Toxicity—Single Exposure
+\item{% if "OTHER" in data.hazard_statement_overview %}[\done]{% endif %} Other
+\item{% if "NOT_APPLICABLE" in data.hazard_statement_overview %}[\done]{% endif %} Not Applicable — Not Hazardous/Not GHS Classified
+\end{checklist}
+\end{multicols}
+
+\begin{center}
+\textbf{\textit{ATTACH CORRESPONDING GHS SAFETY DATA SHEET(S)} }
+\end{center}
+
+\section*{Requester Certification}
+I certify that I have personally examined and am familiar with the information submitted in this document and all attachments, and believe the information to be true, accurate and complete. The Safety Data Sheets (SDS) attached are representative of the material requested for shipment and are the most up to date. In instances where a GHS SDS has not bee provided, I have performed a diligent effort to obtain a representative GHS SDS without success.\\
+\\
+\begin{minipage}[t]{0.7\textwidth}
+\textbf{Requestor Signature:} \hrulefill
+\end{minipage}
+\quad
+\begin{minipage}[t]{0.3\textwidth}
+\textbf{Date:}\hspace{1em}{{- data.signature_date -}}
+\end{minipage}
 
 \end{document}

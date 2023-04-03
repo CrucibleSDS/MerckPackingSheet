@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "merckpackingsheet"
+version = "0.1.0"
+description = ""
+authors = ["Brian Lu <me@greencappuccino.net>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+PyPDF2 = "^3.0.1"
+Jinja2 = "^3.1.2"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.2.1"
+flake8 = "^6.0.0"
+Flake8-pyproject = "^1.2.3"
+taskipy = "^1.10.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

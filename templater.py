@@ -41,8 +41,7 @@ class Templater:
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
             with open(Path(td, 'output.log'), 'rb') as f:
-                print(f.read().decode('utf-8'))
-                # self.logger.debug()
+                self.logger.debug(f.read().decode('utf-8'))
                 pass
             with open(Path(td, 'output.pdf'), 'rb') as f:
                 pdf = f.read()
@@ -51,8 +50,8 @@ class Templater:
 
 class HazardStatementOverview(Enum):
     ACUTE_TOXICITY = enum.auto()
-    ASPIRATIONAL_HAZARD = enum.auto()
-    CARCINOGENCITY = enum.auto()
+    ASPIRATION_HAZARD = enum.auto()
+    CARCINOGENICITY = enum.auto()
     EMIT_FLAMMABLE_GASES = enum.auto()
     COMBUSTIBLE_DUST = enum.auto()
     CORROSIVE_TO_METALS = enum.auto()
@@ -61,7 +60,7 @@ class HazardStatementOverview(Enum):
     FLAMMABLE_LIQUIDS = enum.auto()
     FLAMMABLE_SOLIDS = enum.auto()
     GASES_UNDER_PRESSURE = enum.auto()
-    GERM_CELL_MUTAGENCITY = enum.auto()
+    GERM_CELL_MUTAGENICITY = enum.auto()
     HAZARDOUS_TO_AQUATIC_ENVIRONMENT = enum.auto()
     HAZARDOUS_TO_OZONE_LAYER = enum.auto()
     OXIDIZING_GASES = enum.auto()
@@ -83,6 +82,129 @@ class HazardStatementOverview(Enum):
     OTHER = enum.auto()
     NOT_APPLICABLE = enum.auto()
 
+    @classmethod
+    def get_statement(cls, hcode):
+        hcode_map: dict[str, cls] = {
+            # ACUTE_TOXICITY
+            "H300": [cls.ACUTE_TOXICITY],
+            "H301": [cls.ACUTE_TOXICITY],
+            "H302": [cls.ACUTE_TOXICITY],
+            "H303": [cls.ACUTE_TOXICITY],
+            "H310": [cls.ACUTE_TOXICITY],
+            "H311": [cls.ACUTE_TOXICITY],
+            "H312": [cls.ACUTE_TOXICITY],
+            "H313": [cls.ACUTE_TOXICITY],
+            "H330": [cls.ACUTE_TOXICITY],
+            "H331": [cls.ACUTE_TOXICITY],
+            "H332": [cls.ACUTE_TOXICITY],
+            "H333": [cls.ACUTE_TOXICITY],
+            # ASPIRATION_HAZARD
+            "H304": [cls.ASPIRATION_HAZARD],
+            "H305": [cls.ASPIRATION_HAZARD],
+            # CARCINOGENICITY
+            "H350": [cls.CARCINOGENICITY],
+            "H351": [cls.CARCINOGENICITY],
+            # EMIT_FLAMMABLE_GASES
+            "H260": [cls.EMIT_FLAMMABLE_GASES],
+            "H261": [cls.EMIT_FLAMMABLE_GASES],
+            # COMBUSTIBLE_DUST TODO CANNOT FIND
+            # CORROSIVE_TO_METALS
+            "H290": [cls.CORROSIVE_TO_METALS],
+            # EXPLOSIVES
+            "H200": [cls.EXPLOSIVES],
+            "H201": [cls.EXPLOSIVES],
+            "H202": [cls.EXPLOSIVES],
+            "H203": [cls.EXPLOSIVES],
+            "H204": [cls.EXPLOSIVES],
+            "H205": [cls.EXPLOSIVES],
+            "H206": [cls.EXPLOSIVES],
+            "H207": [cls.EXPLOSIVES],
+            "H208": [cls.EXPLOSIVES],
+            "H209": [cls.EXPLOSIVES],
+            "H210": [cls.EXPLOSIVES],
+            "H211": [cls.EXPLOSIVES],
+            # FLAMMABLE_AEROSOLS
+            "H222": [cls.FLAMMABLE_AEROSOLS],
+            "H223": [cls.FLAMMABLE_AEROSOLS],
+            "H229": [cls.FLAMMABLE_AEROSOLS], # TODO CHECK IF "AEROSOLS" FIT HERE
+            # FLAMMABLE_LIQUIDS
+            "H224": [cls.FLAMMABLE_LIQUIDS],
+            "H225": [cls.FLAMMABLE_LIQUIDS],
+            "H226": [cls.FLAMMABLE_LIQUIDS],
+            "H227": [cls.FLAMMABLE_LIQUIDS],
+            # FLAMMABLE_SOLIDS
+            "H228": [cls.FLAMMABLE_SOLIDS],
+            # GASES_UNDER_PRESSURE
+            "H280": [cls.GASES_UNDER_PRESSURE],
+            "H281": [cls.GASES_UNDER_PRESSURE],
+            "H282": [cls.GASES_UNDER_PRESSURE],
+            "H283": [cls.GASES_UNDER_PRESSURE],
+            "H284": [cls.GASES_UNDER_PRESSURE],
+            # GERM_CELL_MUTAGENICITY
+            "H340": [cls.GERM_CELL_MUTAGENICITY],
+            "H341": [cls.GERM_CELL_MUTAGENICITY],
+            # HAZARDOUS_TO_AQUATIC_ENVIRONMENT
+            "H400": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H401": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H402": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H410": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H411": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H412": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            "H413": [cls.HAZARDOUS_TO_AQUATIC_ENVIRONMENT],
+            # HAZARDOUS_TO_OZONE_LAYER
+            "H420": [cls.HAZARDOUS_TO_OZONE_LAYER],
+            # OXIDIZING_GASES
+            "H270": [cls.OXIDIZING_GASES],
+            # OXIDIZING_LIQUIDS, OXIDIZING_SOLIDS
+            "H271": [cls.OXIDIZING_LIQUIDS, cls.OXIDIZING_SOLIDS],
+            "H272": [cls.OXIDIZING_LIQUIDS, cls.OXIDIZING_SOLIDS],
+            # ORGANIC_PEROXIDES, SELF_REACTIVE_CHEMICALS
+            "H240": [cls.ORGANIC_PEROXIDES, cls.SELF_REACTIVE_CHEMICALS],
+            "H241": [cls.ORGANIC_PEROXIDES, cls.SELF_REACTIVE_CHEMICALS],
+            "H242": [cls.ORGANIC_PEROXIDES, cls.SELF_REACTIVE_CHEMICALS],
+            # PYROPHORIC_GAS
+            "H220": [cls.PYROPHORIC_GAS],
+            # PYROPHORIC_LIQUIDS, PYROPHORIC_SOLID
+            "H250": [cls.PYROPHORIC_LIQUIDS, cls.PYROPHORIC_SOLID],
+            # REPRODUCTIVE_TOXICITY
+            "H360": [cls.REPRODUCTIVE_TOXICITY],
+            "H361": [cls.REPRODUCTIVE_TOXICITY],
+            "H362": [cls.REPRODUCTIVE_TOXICITY],
+            # RESPIRATORY_OR_SKIN_SENSITIZATION
+            "H317": [cls.RESPIRATORY_OR_SKIN_SENSITIZATION],
+            # SELF_HEATING_CHEMICALS
+            "H251": [cls.SELF_HEATING_CHEMICALS],
+            "H252": [cls.SELF_HEATING_CHEMICALS],
+            # SERIOUS_EYE_DAMAGE_IRRITATION
+            "H314": [cls.SERIOUS_EYE_DAMAGE_IRRITATION, cls.SKIN_CORROSION_IRRITATION],
+            "H318": [cls.SERIOUS_EYE_DAMAGE_IRRITATION],
+            "H319": [cls.SERIOUS_EYE_DAMAGE_IRRITATION],
+            "H320": [cls.SERIOUS_EYE_DAMAGE_IRRITATION],
+            # SKIN_CORROSION_IRRITATION
+            "H315": [cls.SKIN_CORROSION_IRRITATION],
+            "H316": [cls.SKIN_CORROSION_IRRITATION],
+            # SIMPLE_ASPHYXIANT TODO CANNOT FIND
+            # ORGAN_TOXICITY_REPEATED_PROLONGED
+            "H372": [cls.ORGAN_TOXICITY_REPEATED_PROLONGED],
+            "H373": [cls.ORGAN_TOXICITY_REPEATED_PROLONGED],
+            # ORGAN_TOXICITY_SINGLE
+            "H335": [cls.ORGAN_TOXICITY_SINGLE],
+            "H336": [cls.ORGAN_TOXICITY_SINGLE],
+            "H370": [cls.ORGAN_TOXICITY_SINGLE],
+            "H371": [cls.ORGAN_TOXICITY_SINGLE],
+        }
+        try:
+            result = hcode_map[hcode]
+        except KeyError:
+            result = []
+        return result
+
+    @classmethod
+    def get_statements(cls, hcodes):
+        statements: list[cls] = []
+        for hcode in hcodes:
+            statements.extend(cls.get_statement(hcode))
+        return statements
 
 class PaperType(Enum):
     A4_PAPER = 'a4paper'

@@ -20,27 +20,31 @@ class Templater:
 
     def generate_pdf(self, data: dict[str, any]) -> BytesIO:
         data['graphicspath'] = f"{(Path(__file__).parent / 'img').absolute()}{os.sep}"
-
         with TemporaryDirectory() as td:
+            with open(Path(td, 'output.tex'), 'w') as f:
+                f.write(self.template.render(data=data))
             args = [
-                'pdflatex',
-                '-interaction-mode=batchmode',
-                f'-output-directory={td}',
-                '-jobname=template',
+                'latexmk',
+                '-cd',
+                '-jobname=output',
+                f'-auxdir={td}',
+                f'-outdir={td}',
+                '-interaction=batchmode',
+                '-halt-on-error',
+                '-pdf',
                 '-shell-escape',
+                'output.tex',
             ]
-            print(self.template.render(data=data))
             subprocess.run(args,
-                           input=self.template.render(data=data).encode(encoding='utf-8'),
                            cwd=td,
                            timeout=15,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
-            with open(Path(td, 'template.log'), 'rb') as f:
+            with open(Path(td, 'output.log'), 'rb') as f:
                 print(f.read().decode('utf-8'))
-                #self.logger.debug()
+                # self.logger.debug()
                 pass
-            with open(Path(td, 'template.pdf'), 'rb') as f:
+            with open(Path(td, 'output.pdf'), 'rb') as f:
                 pdf = f.read()
         return BytesIO(pdf)
 

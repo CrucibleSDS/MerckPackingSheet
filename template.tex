@@ -41,7 +41,7 @@
 
 \newlist{checklist}{itemize}{2}
 \setlist[checklist]{label={\color{MerckTeal}$\square$} }
-\newcommand{\done}{\rlap{\color{MerckTeal}$\square$}{\raisebox{2pt}{\large\hspace{1pt}\ding{51} } }\hspace{-2.5pt} }
+\newcommand{\done}{\rlap{\color{MerckTeal}$\square$}\ding{55} }
 
 \title{Merck Packing Sheet}
 \author{Crucible SDS Software}
@@ -69,10 +69,11 @@
 \end{tikzpicture}
 
 \section*{Product Name: {\color{MerckTeal} {{- data.product_name -}} } }
-
+\vspace{-1em}
 \section*{Ship To/Destination Country: {\color{MerckTeal} {{- data.destination_country -}} } }
-
+\vspace{-1em}
 \section*{Composition/Ingredients}
+\vspace{-1.5em}
 \rowcolors{1}{gray!25}{white}
 \begin{xltabular}{\textwidth}{ {{-data.columns -}} }
     \rowcolor{white}
@@ -116,8 +117,8 @@
 \end{minipage}
 
 \subsection*{Hazard Statement(s) Overview}
-\begin{multicols}{3}
-\begin{checklist}
+\begin{multicols}{3}\raggedright
+\begin{checklist}[noitemsep]
 \item{% if "ACUTE_TOXICITY" in data.hazard_statement_overview %}[\done]{% endif %} Acute Toxicity
 \item{% if "ASPIRATIONAL_HAZARD" in data.hazard_statement_overview %}[\done]{% endif %} Aspirational Hazard
 \item{% if "CARCINOGENCITY" in data.hazard_statement_overview %}[\done]{% endif %} Carcinogencity
@@ -156,7 +157,7 @@
 \begin{center}
 \textbf{\textit{ATTACH CORRESPONDING GHS SAFETY DATA SHEET(S)} }
 \end{center}
-
+\vspace{-2em}
 \section*{Requester Certification}
 I certify that I have personally examined and am familiar with the information submitted in this document and all attachments, and believe the information to be true, accurate and complete. The Safety Data Sheets (SDS) attached are representative of the material requested for shipment and are the most up to date. In instances where a GHS SDS has not bee provided, I have performed a diligent effort to obtain a representative GHS SDS without success.\\
 \\
